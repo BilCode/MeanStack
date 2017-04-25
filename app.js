@@ -8,6 +8,7 @@ const config = require("./config/database");
 app.use(bodyParser.json());
 app.use(routes);
 
+mongoose.Promise=global.Promise;
 mongoose.connect(config.database);
 
 mongoose.connection.on("connected",()=>{
