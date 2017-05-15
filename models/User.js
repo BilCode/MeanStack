@@ -30,3 +30,10 @@ module.exports.getUserByName = function(userName,callback){
     const qurey = {name: userName};
     User.findOne(qurey,callback);
 }
+
+module.exports.comparePasword= function(candidatePassword, hash,callback){
+    bcrypt.compare(candidatePassword,hash,(err,isMatch)=>{
+        if(err) throw err;
+        callback(null,isMatch);
+    });
+}

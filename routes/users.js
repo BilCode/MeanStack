@@ -13,17 +13,15 @@ router.post("/login",(req,res)=>{
     const userpass = req.body.password;
     User.getUserByName(username,(err,user)=>{
         if(err) throw err;
-        if(!user){
-            res.json({success:false,message:"User Name is not valid"});
-        }else{
-            res.json({success:true,message:"Loged In"});
-        }
+        User.comparePasword(userpass,user.password,(err,isMatch)=>{
+            if(err) throw err;
+            if(isMatch) res.json({success:true,message:"Loged In"});
+            else res.json({success:false,message:"User Name is not valid"});
+        });
     });
-    
-
 });
 
-router.post("/mydata",(req,res)=>{
+router.post("/adduser",(req,res)=>{
     console.log(req.body);
     //res.send("Thanks man");
     //const newUser= new User({name: "bilal", password:"123"});
@@ -47,7 +45,5 @@ router.post("/mydata",(req,res)=>{
       //  console.log("User added succusfully "+User.name+" "+User.password);
    // });
 });
-
-
 
 module.exports= router;
