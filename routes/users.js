@@ -1,6 +1,9 @@
 const express =require("express");
 const router= express.Router();
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const config = require("../config/database");
+const passport= require("passport");
 
 router.get("/mypage",(req,res)=>{
     console.log("Welcome to my router");
@@ -15,10 +18,19 @@ router.post("/login",(req,res)=>{
         if(err) throw err;
         User.comparePasword(userpass,user.password,(err,isMatch)=>{
             if(err) throw err;
-            if(isMatch) res.json({success:true,message:"Loged In"});
+            if(isMatch)
+            { 
+                //res.json({success:true,message:"Loged In"});
+                const token= jwt.sign(user,config.secret,{expiresIn:6040800});
+                res.json({success:true,token:"JWT "+token});
+            }
             else res.json({success:false,message:"User Name is not valid"});
         });
     });
+});
+
+router.get("/profile",passport.authenticate('jwt',{session:false}),(req,res)=>{
+    res.json({message:"This is profile"});
 });
 
 router.post("/adduser",(req,res)=>{

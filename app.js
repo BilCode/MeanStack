@@ -4,12 +4,18 @@ const app=express();
 const routes = require("./routes/users")
 const mongoose = require("mongoose")
 const config = require("./config/database");
+const passport=require("passport")
 
 app.use(bodyParser.json());
 app.use(routes);
 
 mongoose.Promise=global.Promise;
 mongoose.connect(config.database);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+require("./config/passport")(passport);
 
 mongoose.connection.on("connected",()=>{
     console.log("Connection to DB established");
